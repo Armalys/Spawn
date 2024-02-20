@@ -51,6 +51,9 @@ public class Spawner : MonoBehaviour
 
     private Quaternion GenerateRandomDirection()
     {
-        return Quaternion.Euler(0, Random.Range(0, 360), 0);
+        float zeroDegrees = 0;
+        float maxDegrees = 360;
+        
+        return Quaternion.Euler(zeroDegrees, Random.Range(zeroDegrees, maxDegrees), zeroDegrees);
     }
 }
