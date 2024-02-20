@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -9,7 +8,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private int _poolCapacity;
     [SerializeField] private int _maxSize;
 
-    [SerializeField] private float _repitRate;
+    [SerializeField] private float _repeatRate;
     [SerializeField] private float _spawnDelay = 1f;
 
     [SerializeField] private GameObject[] _spawnPoints = new GameObject[3];
@@ -18,7 +17,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(GetEnemy), _spawnDelay, _repitRate);
+        InvokeRepeating(nameof(GetEnemy), _spawnDelay, _repeatRate);
     }
 
     private void Awake()
@@ -35,20 +34,23 @@ public class Spawner : MonoBehaviour
 
     private void SetUpEnemy(Enemy enemy)
     {
-        Transform randomPoint = ChoseRandomPoint();
-        
-        enemy.SetPosition(randomPoint.position);
-        enemy.SetRotation(randomPoint.rotation);
+        enemy.SetPosition(ChoseRandomPoint());
+        enemy.SetRotation(GenerateRandomDirection());
     }
 
     private void GetEnemy()
     {
         Enemy enemy = _poolOfEnemy.Get();
-        StartCoroutine(enemy.MoveForward());
+        enemy.StartMoving();
     }
 
-    private Transform ChoseRandomPoint()
+    private Vector3 ChoseRandomPoint()
     {
-        return _spawnPoints[Random.Range(0, _spawnPoints.Length)].transform;
+        return _spawnPoints[Random.Range(0, _spawnPoints.Length)].transform.position;
+    }
+
+    private Quaternion GenerateRandomDirection()
+    {
+        return Quaternion.Euler(0, Random.Range(0, 360), 0);
     }
 }
