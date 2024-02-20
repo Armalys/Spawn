@@ -12,6 +12,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _spawnDelay = 1f;
 
     [SerializeField] private GameObject[] _spawnPoints = new GameObject[3];
+    [SerializeField] private GameObject[] _targetPoints = new GameObject[3];
 
     private ObjectPool<Enemy> _poolOfEnemy;
 
@@ -24,7 +25,7 @@ public class Spawner : MonoBehaviour
     {
         _poolOfEnemy = new ObjectPool<Enemy>(
             createFunc: () => Instantiate(_prefab),
-            actionOnGet: SetUpEnemy,
+            actionOnGet: SetUpPosition,
             actionOnRelease: enemy => enemy.gameObject.SetActive(true),
             actionOnDestroy: Destroy,
             collectionCheck: true,
@@ -32,28 +33,20 @@ public class Spawner : MonoBehaviour
             maxSize: _maxSize);
     }
 
-    private void SetUpEnemy(Enemy enemy)
+    private void SetUpPosition(Enemy enemy)
     {
-        enemy.SetPosition(ChoseRandomPoint());
-        enemy.SetRotation(GenerateRandomDirection());
+        enemy.SetPosition(ChoseRandomPoint(_spawnPoints));
     }
 
     private void GetEnemy()
     {
         Enemy enemy = _poolOfEnemy.Get();
-        enemy.StartMoving();
+
+        enemy.StartMoving(ChoseRandomPoint(_targetPoints));
     }
 
-    private Vector3 ChoseRandomPoint()
+    private Vector3 ChoseRandomPoint(GameObject[] points)
     {
-        return _spawnPoints[Random.Range(0, _spawnPoints.Length)].transform.position;
-    }
-
-    private Quaternion GenerateRandomDirection()
-    {
-        float zeroDegrees = 0;
-        float maxDegrees = 360;
-        
-        return Quaternion.Euler(zeroDegrees, Random.Range(zeroDegrees, maxDegrees), zeroDegrees);
+        return points[Random.Range(0, points.Length)].transform.position;
     }
 }

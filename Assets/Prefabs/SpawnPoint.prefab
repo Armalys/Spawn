@@ -45,7 +45,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefab: {fileID: 4644139957868978571, guid: c8ab0afc022934d40945954367849a20, type: 3}
-  _repitRate: 2
   _poolCapacity: 10
   _maxSize: 10
+  _repeatRate: 0
   _spawnDelay: 2
+  _spawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _targetPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
