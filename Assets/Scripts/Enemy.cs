@@ -5,9 +5,9 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _movedSpeed;
 
-    public void StartMoving(Vector3 targetPosition)
+    public void StartMoving(Vector3 direction)
     {
-        StartCoroutine(MoveForward(targetPosition));
+        StartCoroutine(Move(direction));
     }
 
     public void SetPosition(Vector3 position)
@@ -15,14 +15,18 @@ public class Enemy : MonoBehaviour
         transform.position = position;
     }
 
-    private IEnumerator MoveForward(Vector3 targetPosition)
+    private IEnumerator Move(Vector3 direction)
     {
-        while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
+        float elapsedTime = 0f;
+        float duration = 10f;
+
+        while (elapsedTime < duration)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, _movedSpeed * Time.deltaTime);
+            transform.Translate(direction * _movedSpeed * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
-
+        
         DestroyObject();
     }
 
