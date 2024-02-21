@@ -33,7 +33,7 @@ public class Spawner : MonoBehaviour
             defaultCapacity: _poolCapacity,
             maxSize: _maxSize);
     }
-    
+
     private IEnumerator SpawnEnemies()
     {
         while (_isSpawnActive)
@@ -52,7 +52,11 @@ public class Spawner : MonoBehaviour
     {
         Enemy enemy = _poolOfEnemy.Get();
 
-        enemy.StartMoving(ChooseRandomDirection());
+        Mover mover = enemy.GetComponent<Mover>();
+        mover.StartMoving(ChooseRandomDirection());
+        
+        Destroyer destroyer = enemy.GetComponent<Destroyer>();
+        destroyer.StartDestroying();
     }
 
     private Vector3 ChoseRandomPoint()
