@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Destroyer : MonoBehaviour
 {
-    [SerializeField] private float _destroyDelay;
+    [SerializeField] private float _destroyDelay = 5f;
 
     public void StartDestroying()
     {

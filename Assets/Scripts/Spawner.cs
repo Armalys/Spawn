@@ -1,19 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Enemy _prefab;
+    [SerializeField] private Enemy _enemy;
     [SerializeField] private int _poolCapacity;
     [SerializeField] private int _maxSize;
 
     [SerializeField] private float _repeatRate;
     [SerializeField] private bool _isSpawnActive = true;
 
-    [SerializeField] private Transform[] _spawnPoints = new Transform[3];
+    [SerializeField] private Transform[] _targetPoints = new Transform[3];
 
     private ObjectPool<Enemy> _poolOfEnemy;
 
@@ -25,7 +24,7 @@ public class Spawner : MonoBehaviour
     private void Awake()
     {
         _poolOfEnemy = new ObjectPool<Enemy>(
-            createFunc: () => Instantiate(_prefab),
+            createFunc: () => Instantiate(_enemy),
             actionOnGet: SetUpPosition,
             actionOnRelease: enemy => enemy.gameObject.SetActive(true),
             actionOnDestroy: Destroy,
@@ -45,7 +44,7 @@ public class Spawner : MonoBehaviour
 
     private void SetUpPosition(Enemy enemy)
     {
-        enemy.SetPosition(ChoseRandomPoint());
+        enemy.SetPosition(transform.position);
     }
 
     private void GetEnemy()
@@ -53,20 +52,14 @@ public class Spawner : MonoBehaviour
         Enemy enemy = _poolOfEnemy.Get();
 
         Mover mover = enemy.GetComponent<Mover>();
-        mover.StartMoving(ChooseRandomDirection());
-        
+        mover.StartMoving(ChoseRandomTargetPoint());
+
         Destroyer destroyer = enemy.GetComponent<Destroyer>();
         destroyer.StartDestroying();
     }
 
-    private Vector3 ChoseRandomPoint()
+    private Vector3 ChoseRandomTargetPoint()
     {
-        return _spawnPoints[Random.Range(0, _spawnPoints.Length)].position;
-    }
-
-    private Vector3 ChooseRandomDirection()
-    {
-        Vector3[] directions = { Vector3.forward, Vector3.back, Vector3.left, Vector3.right };
-        return directions[Random.Range(0, directions.Length)];
+        return _targetPoints[Random.Range(0, _targetPoints.Length)].position;
     }
 }
